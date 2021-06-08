@@ -15,7 +15,7 @@ CREATE TABLE books(
     title TEXT,
     author TEXT,
     cover_image TEXT,
-    rating FLOAT,
+    rating DECIMAL,
     genre TEXT,
     bio TEXT
 );
@@ -24,9 +24,7 @@ CREATE TABLE books_users(
     id SERIAL PRIMARY KEY,
     book_id INTEGER,
     user_id INTEGER,
-    books_want BOOLEAN,
-    books_current BOOLEAN,
-    books_read BOOLEAN
+    book_status TEXT
 );
 
 

@@ -3,6 +3,27 @@ require 'sinatra/reloader' if development?
 require 'PG'
 require 'bcrypt'
 require 'httparty'
+require 'pry'
+require_relative "db/helper.rb"
+
+enable :sessions
+
+# METHODS
+
+def current_user
+  if session[:user_id] == nil
+    return {}
+  else
+    return run_sql("SELECT * FROM users WHERE id = #{session[:user_id]};")[0]
+  end
+end
+
+def logged_in?
+  if session[:user_id] == nil
+    return false
+  end
+  return true
+end
 
 def book_search(search_book)
   url = "https://www.googleapis.com/books/v1/volumes?q=#{search_book}&printType=books&orderBy=relevance&maxResults=40&key=#{ENV['GOOGLEBOOKS_API_KEY']}"
@@ -14,12 +35,9 @@ def one_book(id)
   return HTTParty.get(url)
 end
 
-def run_sql(sql, params = [])
-  db = PG.connect(ENV['DATABASE_URL'] || {dbname: 'l_bry'})
-  res = db.exec(sql, params)
-  db.close
-  return res
-end
+
+
+# HTTP METHODS
 
 get '/' do
   erb :index
@@ -64,4 +82,28 @@ get '/books/new/:id' do
       genre: genre,
       bio: bio
     }
+end
+
+get '/login' do
+  erb :login
+end
+
+post '/session' do
+  sql = "SELECT * FROM users WHERE email = '#{params["email"]}'"
+  records = run_sql(sql)
+
+  if records.count>0 && BCrypt::Password.new(records[0]['password_digest']) == params["password"]
+    logged_in_user = records[0]
+    session[:user_id] = logged_in_user["id"]
+    redirect '/'
+  else
+    erb :login
   end
+ 
+
+end
+
+delete '/session' do
+  session[:user_id] = nil
+  redirect '/'
+end
