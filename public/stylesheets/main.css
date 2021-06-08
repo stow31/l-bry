@@ -37,6 +37,15 @@ h1, h2{
     background-color: black;
 } */
 
+button.logged-in{
+    background-color: blue;
+    color: white
+}
+
+button.not-logged-in{
+    background-color: grey;
+}
+
 footer{
     margin: 40px 0;
 }

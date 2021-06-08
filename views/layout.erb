@@ -10,10 +10,23 @@
   <header>
     <nav>
       <a href="/">Home</a>
-      <button>
-        <a href="/login">Login</a>
-      </button>
+          
+
     </nav>
+      <% if logged_in?%>
+
+        Logged in as <%=current_user()["first_name"]%>
+
+        <form action="/books/session" method="post">
+          <input type="hidden" name="_method" value="delete">
+          <button>Logout</button>
+        </form>
+
+      <%else%>
+          <button>
+            <a href="/books/login">Login</a>
+          </button>
+      <% end %>
     <h1>L-Bry</h1>
 
   </header>

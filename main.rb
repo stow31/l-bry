@@ -1,9 +1,9 @@
 require 'sinatra'
 require 'sinatra/reloader' if development?
-require 'PG'
+require 'pg'
 require 'bcrypt'
 require 'httparty'
-require 'pry'
+require 'pry' if development?
 require_relative "db/helper.rb"
 
 enable :sessions
@@ -13,8 +13,8 @@ enable :sessions
 def current_user
   if session[:user_id] == nil
     return {}
-  else
-    return run_sql("SELECT * FROM users WHERE id = #{session[:user_id]};")[0]
+  else 
+    run_sql("SELECT * FROM users WHERE id = #{session[:user_id]};")[0]
   end
 end
 
@@ -84,11 +84,15 @@ get '/books/new/:id' do
     }
 end
 
-get '/login' do
-  erb :login
+get '/books/login' do
+  if logged_in?
+    redirect '/'
+  else
+    erb :login
+  end
 end
 
-post '/session' do
+post '/books/session' do
   sql = "SELECT * FROM users WHERE email = '#{params["email"]}'"
   records = run_sql(sql)
 
@@ -100,10 +104,48 @@ post '/session' do
     erb :login
   end
  
-
 end
 
-delete '/session' do
+delete '/books/session' do
   session[:user_id] = nil
   redirect '/'
 end
+
+get '/books/signup' do
+  if logged_in?
+    redirect '/'
+  else
+    erb :sign_up
+  end
+end
+
+post '/books/new_session' do
+  email = params["email"]
+  password = params["password"]
+  first_name = params["first_name"]
+  last_name = params["last_name"]
+
+  sql_check = "SELECT * FROM users WHERE email = '#{email}';"
+  records = run_sql(sql_check)
+
+  if records.count == 0
+
+    password_digest = BCrypt::Password.create(password)
+
+    sql_insert = "INSERT INTO users (email, password_digest, first_name, last_name) VALUES ('#{email}', '#{password_digest}', '#{first_name}', '#{last_name}');"
+
+    run_sql(sql_insert)
+
+    sql_get_id = "SELECT * FROM users WHERE email = '#{email}';"
+
+    logged_in_result = run_sql(sql_get_id)
+    logged_in_user = logged_in_result[0]
+    session[:user_id] = logged_in_user["id"]
+
+    redirect '/'
+  else
+    erb :login
+  end
+ 
+end
+
