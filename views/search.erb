@@ -1,0 +1,11 @@
+<h2>Search Results</h2>
+
+<ul>
+    <%books.each do |book|%>
+        <li>
+            <a href="/books/new/<%= book["id"] %>">
+                <%=book["volumeInfo"]["title"]%>
+            </a>
+        </li>
+    <%end%>
+</ul>
