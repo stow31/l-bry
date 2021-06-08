@@ -1,0 +1,42 @@
+body{
+    background-color: #F4F2F2;
+    font-family: Verdana, Geneva, Tahoma, sans-serif
+}
+
+/* .search-field{
+    margin: 25px auto;
+    text-align: center;
+}
+
+a:visited{
+    color: black;
+} */
+
+.grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 60%;
+    margin: 35px auto;
+    gap: 10px;
+}
+
+h1, h2{
+    text-align: center;
+}
+
+.bold{
+    font-weight: 900;
+}
+
+/* .get-movie-details-btn{
+    border-radius: 20px;
+    padding: 5px 20px;
+    display: block;
+    margin: 20px auto;
+    color: white;
+    background-color: black;
+} */
+
+footer{
+    margin: 40px 0;
+}
