@@ -17,12 +17,13 @@ CREATE TABLE books(
     cover_image TEXT,
     rating DECIMAL,
     genre TEXT,
-    bio TEXT
+    bio TEXT,
+    google_id TEXT
 );
 
 CREATE TABLE books_users(
     id SERIAL PRIMARY KEY,
-    book_id INTEGER,
+    book_id TEXT,
     user_id INTEGER,
     book_status TEXT
 );
@@ -38,5 +39,9 @@ INSERT INTO books (title, author, rating, genre, bio) VALUES (
 
 ALTER TABLE books
 ADD book_cover_image TEXT;
+
+
+ALTER TABLE books
+ADD google_id INTEGER;
 
 UPDATE books SET book_cover_image = 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1614630096l/53404196._SY475_.jpg' WHERE id = 1;

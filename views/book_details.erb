@@ -13,15 +13,18 @@
 
         <% if logged_in?%>
 
-            <form action="/books/session" method="post">
-                <input type="hidden" name="_method" value="delete">
-                <button class="logged-in">Want to Read</button>
-        </form>
+            <form action="/books/want/<%= google_id %>" method="post">
+                <button class="logged-in">
+                    Want to Read
+                </button>
+            </form>
 
         <%else%>
+
             <button class="not-logged-in">
                 <a href="/books/login">Want to Read</a>
             </button>
+
         <% end %>
     </div>
 </div>

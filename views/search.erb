@@ -3,7 +3,7 @@
 <ul>
     <%books.each do |book|%>
         <li>
-            <a href="/books/new/<%= book["id"] %>">
+            <a href="/books/details/<%= book["id"] %>">
                 <%=book["volumeInfo"]["title"]%>
             </a>
         </li>

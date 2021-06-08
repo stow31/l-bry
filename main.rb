@@ -35,14 +35,13 @@ def one_book(id)
   return HTTParty.get(url)
 end
 
-
-
 # HTTP METHODS
 
 get '/' do
   erb :index
 end
 
+# search results page
 get '/books/search' do
   search_book = params["search_books"]
   res = book_search(search_book)
@@ -52,7 +51,8 @@ get '/books/search' do
   }
 end
 
-get '/books/new/:id' do
+# individual book detail page & add the book clicked to the DB
+get '/books/details/:id' do
   res = one_book(params["id"])
   
   title = res["volumeInfo"]["title"]
@@ -62,28 +62,32 @@ get '/books/new/:id' do
   genre = res["volumeInfo"]["categories"]
   # .join.gsub(" /", ",")
   bio = res["volumeInfo"]["description"]
+  google_id = params["id"]
 
-  sql = "INSERT INTO books (title, author, cover_image, rating, genre, bio) VALUES ($1, $2, $3, $4, $5, $6);"
+  sql = "INSERT INTO books (title, author, cover_image, rating, genre, bio, google_id) VALUES ($1, $2, $3, $4, $5, $6, $7);"
 
-  # run_sql(sql, [
-  #   title,
-  #   author,
-  #   cover_image,
-  #   rating,
-  #   genre,
-  #   bio
-  #   ])
+  run_sql(sql, [
+    title,
+    author,
+    cover_image,
+    rating,
+    genre,
+    bio,
+    google_id
+    ])
 
-    erb :book_details, locals:{
-      title: title,
-      cover_image: cover_image,
-      author: author,
-      rating: rating,
-      genre: genre,
-      bio: bio
-    }
+  erb :book_details, locals:{
+    title: title,
+    cover_image: cover_image,
+    author: author,
+    rating: rating,
+    genre: genre,
+    bio: bio,
+    google_id: google_id
+  }
 end
 
+# login page
 get '/books/login' do
   if logged_in?
     redirect '/'
@@ -92,6 +96,7 @@ get '/books/login' do
   end
 end
 
+# setting up login action 
 post '/books/session' do
   sql = "SELECT * FROM users WHERE email = '#{params["email"]}'"
   records = run_sql(sql)
@@ -106,11 +111,13 @@ post '/books/session' do
  
 end
 
+# set up log out action 
 delete '/books/session' do
   session[:user_id] = nil
   redirect '/'
 end
 
+# sign up page 
 get '/books/signup' do
   if logged_in?
     redirect '/'
@@ -119,6 +126,7 @@ get '/books/signup' do
   end
 end
 
+# set up the new account action
 post '/books/new_session' do
   email = params["email"]
   password = params["password"]
@@ -148,4 +156,17 @@ post '/books/new_session' do
   end
  
 end
+
+# add book to your want to read list if logged in 
+# NOTE I AM USING THE GOOGLE_ID FOR THE JOIN HERE 
+post '/books/want/:id' do
+  google_id = params["id"]
+
+  sql_insert = "INSERT INTO books_users (book_id, user_id, book_status) VALUES ( '#{google_id}', #{session[:user_id]}, 'want');"
+
+  run_sql(sql_insert)
+
+  redirect '/'
+end
+
 
