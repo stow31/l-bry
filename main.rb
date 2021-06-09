@@ -46,7 +46,7 @@ end
 get '/books/search' do
   search_book = params["search_books"]
   res = book_search(search_book)
-
+  # binding.pry
   erb :search, locals:{
     books: res["items"]
   }
@@ -58,11 +58,10 @@ get '/books/details/:id' do
   res = one_book(params["id"])
   
   title = res["volumeInfo"]["title"]
-  cover_image = res["volumeInfo"]["imageLinks"]["small"]
-  author = res["volumeInfo"]["authors"].join
+  cover_image = res["volumeInfo"]["imageLinks"]["thumbnail"]
+  author = res["volumeInfo"]["authors"]&.join
   rating = res["volumeInfo"]["averageRating"]
-  genre = res["volumeInfo"]["categories"]
-  # .join.gsub(" /", ",")
+  genre = res["volumeInfo"]["categories"]&.join&.gsub(" /", ",")
   bio = res["volumeInfo"]["description"]
   google_id = params["id"]
   
@@ -70,11 +69,6 @@ get '/books/details/:id' do
     sql = "SELECT * FROM books_users WHERE user_id = #{current_user["id"]} AND book_id = '#{google_id}';"
     records = run_sql(sql)
 
-    if records.count > 0
-      return records 
-    else
-      records = {}
-    end
   end
 
   erb :book_details, locals:{

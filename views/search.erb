@@ -1,16 +1,16 @@
 <h2>Search Results</h2>
 
 <ul class="search-results-list">
-    <%books.each do |book|%>
+    <%books&.each do |book|%>
         <li>
             <a href="/books/details/<%= book["id"] %>">
                 <div class="search-container-div">
                     <div class="book-img">
-                        <img src="http://books.google.com/books/content?id=1AymTljYK94C&printsec=frontcover&img=1&zoom=2&edge=curl&imgtk=AFLRE7297aDW6I-iWdgB7uV5s6PhDgJyeJHKGx5Czg-kZZnVmwhirYB4g7UHNN89tbkt8GTYF-8Tj_d3xK8RvokH3_1yaoeot7d4WZyQyqb8ndK4LRpENQQdhuwgvA7pFx60Ih7kQ6lv&source=gbs_api" alt="">
+                        <img src="<%= book.dig("volumeInfo", "imageLinks", "smallThumbnail")%>" alt="">
                     </div>            
                     <div class="book-details">
                         <p><%=book["volumeInfo"]["title" ]%></p>
-                        <p> by <%=book["volumeInfo"]["authors"].to_s%></p>                    
+                        <p> by <%=book["volumeInfo"]["authors"]&.join%></p>                    
                     </div>
                 </div>
             </a>
@@ -19,5 +19,4 @@
 </ul>
 
 
-<%#= book["volumeInfo"]["imageLinks"]["smallThumbnail"]%>
 

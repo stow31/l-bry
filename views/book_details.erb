@@ -1,14 +1,15 @@
 <div class="book-details-grid-div">
     <div class="col1">
-        <img src="<%= cover_image %>" alt="">
+        <img class="book-detail-img" src="<%= cover_image %>" alt="">
     </div>
     <div class="col2">
         <h2><%= title %></h2>
-        <ul>
+        <ul class="book-details-list">
             <li><span class="bold">Author: </span><%= author %></li>
+            <li><span class="bold">Rating: </span><%= rating %></li>
+            <li><span class="bold">Genre: </span><%= rating %></li>
             <li><span class="bold">Plot: </span><%= bio %></li>
 
-            <li><span class="bold">Rating: </span><%= rating %></li>
         </ul>
 
         <% if logged_in?%>
