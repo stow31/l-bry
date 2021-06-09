@@ -68,8 +68,13 @@ get '/books/details/:id' do
   
   if logged_in?
     sql = "SELECT * FROM books_users WHERE user_id = #{current_user["id"]} AND book_id = '#{google_id}';"
-
     records = run_sql(sql)
+
+    if records.count > 0
+      return records 
+    else
+      records = {}
+    end
   end
 
   erb :book_details, locals:{
