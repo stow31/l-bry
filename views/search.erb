@@ -6,7 +6,7 @@
             <a href="/books/details/<%= book["id"] %>">
                 <div class="search-container-div">
                     <div class="book-img">
-                        <img src="<%= book["volumeInfo"]["imageLinks"]["smallThumbnail"]%>" alt="">
+                        <img src="http://books.google.com/books/content?id=1AymTljYK94C&printsec=frontcover&img=1&zoom=2&edge=curl&imgtk=AFLRE7297aDW6I-iWdgB7uV5s6PhDgJyeJHKGx5Czg-kZZnVmwhirYB4g7UHNN89tbkt8GTYF-8Tj_d3xK8RvokH3_1yaoeot7d4WZyQyqb8ndK4LRpENQQdhuwgvA7pFx60Ih7kQ6lv&source=gbs_api" alt="">
                     </div>            
                     <div class="book-details">
                         <p><%=book["volumeInfo"]["title" ]%></p>
@@ -17,3 +17,7 @@
         </li>
     <%end%>
 </ul>
+
+
+<%#= book["volumeInfo"]["imageLinks"]["smallThumbnail"]%>
+
