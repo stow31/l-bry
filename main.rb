@@ -31,7 +31,8 @@ def book_search(search_book)
 end
 
 def one_book(id)
-  url = "https://www.googleapis.com/books/v1/volumes/#{id}"
+  url = "https://www.googleapis.com/books/v1/volumes/#{id}
+  ?key=#{ENV['GOOGLEBOOKS_API_KEY']"
   return HTTParty.get(url)
 end
 
@@ -53,6 +54,8 @@ end
 
 # individual book detail page & add the book clicked to the DB
 get '/books/details/:id' do
+
+
   res = one_book(params["id"])
   
   title = res["volumeInfo"]["title"]
