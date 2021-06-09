@@ -8,29 +8,28 @@
 </head>
 <body>
   <header>
-    <nav>
+    <nav class="main-nav">
       <a href="/">Home</a>
+      <a href="/books/about">About</a>
     </nav>
 
-    <h1>L-Bry</h1>
+    <a class="logo" href="/"><h1>L-Bry</h1></a>
 
-    <section>
+    <section class="account-section">
       <% if logged_in?%>
 
         Logged in as <a href="/books/myaccount"><%=current_user()["first_name"]%></a>
 
         <form action="/books/session" method="post">
           <input type="hidden" name="_method" value="delete">
-          <button>Logout</button>
+          <button class="logout-btn">Logout</button>
         </form>
 
       <%else%>
-      
-          <button class="login-btn">
-            <a  href="/books/login">
-              <img style="width:100%" src="https://image.flaticon.com/icons/png/512/747/747376.png" alt="">
-            </a>
-          </button>
+
+        <a  href="/books/login">
+          <img class="account-img" src="https://image.flaticon.com/icons/png/512/747/747376.png" alt="">
+        </a>
 
       <% end %>
     </section>

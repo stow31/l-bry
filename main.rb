@@ -82,6 +82,11 @@ get '/books/details/:id' do
   }
 end
 
+# about page
+get '/books/about' do
+  erb :about
+end
+
 # login page
 get '/books/login' do
   if logged_in?
@@ -161,7 +166,7 @@ post '/books/want/:id' do
 
   run_sql(sql_insert)
 
-  redirect '/'
+  redirect '/books/want'
 end
 
 # my account page 
@@ -198,6 +203,8 @@ put '/books/current/:book_id' do
   sql = "UPDATE books_users SET book_status = 'current' WHERE user_id = #{user_id} AND book_id = '#{book_id}';"
 
   run_sql(sql)
+
+  redirect '/books/current'
 end
 
 # currently reading page

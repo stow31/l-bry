@@ -14,18 +14,19 @@
         <% if logged_in?%>
 
             <%if records.count>0%>
-                <% if records[0]["book_status"] == 'want' %>
-                    <p>You want to read this book</p>
-                <% elsif records[0]["book_status"] == 'current' %>
-                    <p>You are currently reading</p>
-                <% elsif records[0]["book_status"] == 'read' %>
-                    <p>You have read this book</p>
-                <% end %>
-
+                <div class="book-update-div">
+                    <% if records[0]["book_status"] == 'want' %>
+                        <p>This book is on your <a href="/books/want">want to read list</a></p>
+                    <% elsif records[0]["book_status"] == 'current' %>
+                        <p>You are <a href="/books/current">currently reading this book</a></p>
+                    <% elsif records[0]["book_status"] == 'read' %>
+                        <p>You have <a href="/books/finished">read this book</a></p>
+                    <% end %>
+                </div>
             <%else%>
 
                 <form action="/books/want/<%= google_id %>" method="post">
-                    <button class="logged-in">
+                    <button class="logged-in-btn">
                         Want to Read
                     </button>
                 </form>
@@ -34,7 +35,7 @@
 
         <%else%>
 
-            <button class="not-logged-in">
+            <button class="not-logged-in-btn">
                 <a href="/books/login">Want to Read</a>
             </button>
 

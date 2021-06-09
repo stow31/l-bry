@@ -1,16 +1,29 @@
 <h2>My Account</h2>
 
 <div class="account-div">
-    <aside class="account-aside">
-        <p><a href="/books/current">Currently Reading</a></p>
+    <aside class="account-menu-aside">
         <p><a href="/books/want">Want to Read</a></p>
+        <p><a href="/books/current">Currently Reading</a></p>
         <p><a href="/books/finished">Books you've read</a></p>
         <p><a href="/books/myaccount">My Account</a></p>
     </aside>
 
     <main class="account-main">
-        <p><%= users["email"] %></p>
-        <p><%= users["first_name"] %></p>
-        <p><%= users["last_name"] %></p>
+        <p>
+            <span class="bold">Email Address:</span>
+            <%= users["email"] %>
+        </p>
+        <p>
+            <span class="bold">First Name:</span>
+            <%= users["first_name"] %>
+        </p>
+        <p>
+            <span class="bold">Last Name:</span>
+            <%=users["last_name"] %>
+        </p>
+        <p>
+            <span class="bold">Password: </span>
+            ****** <a href="/">Change Password</a>
+        </p>
     </main>
 </div>

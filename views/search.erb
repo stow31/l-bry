@@ -1,11 +1,18 @@
 <h2>Search Results</h2>
 
-<ul>
+<ul class="search-results-list">
     <%books.each do |book|%>
         <li>
             <a href="/books/details/<%= book["id"] %>">
-                <p><%=book["volumeInfo"]["title" ]%></p>
-                <p> by <%=book["volumeInfo"]["authors"].to_s%></p>
+                <div class="search-container-div">
+                    <div class="book-img">
+                        <img src="<%= book["volumeInfo"]["imageLinks"]["smallThumbnail"]%>" alt="">
+                    </div>            
+                    <div class="book-details">
+                        <p><%=book["volumeInfo"]["title" ]%></p>
+                        <p> by <%=book["volumeInfo"]["authors"].to_s%></p>                    
+                    </div>
+                </div>
             </a>
         </li>
     <%end%>

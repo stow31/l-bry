@@ -1,20 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
 body{
-    background-color: #F4F2F2;
+    background-color: #E2E8C0;
     font-family: Verdana, Geneva, Tahoma, sans-serif
 }
 
 header{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr;
+}
+
+footer{
+    margin: 40px 0;
+}
+
+a {
+    color: black;
+}
+
+a:visited{
+    color: black;
+}
+
+h1{
+    font-family: 'Bebas Neue', cursive;
+    font-size: 106px;
+    margin: 10px auto;
 }
 
 h1, h2{
     text-align: center;
 }
 
+button{
+    border-radius: 20px;
+    padding: 8px 20px;
+    background-color: #CEA07E;
+    border: none;
+    color: white;
+}
+
+button:hover{
+    background-color: black;
+    color: white;
+}
+
+input{
+    display: block;
+    margin: 10px auto;
+}
+
+form{
+    text-align: center;
+}
+
+.logo{
+    text-decoration: none;
+    color: black;
+}
+
+.main-nav{
+    margin: 20px 20px;
+}
+
+.main-nav>a{
+    margin-left: 5px;
+}
+
+.logout-btn{
+    margin-top: 10px;
+}
+
 .bold{
     font-weight: 900;
+}
+
+.account-img{
+    width: 25px;
+    background-color: transparent;
+    margin: 20px 16px;
+}
+
+.account-section{
+    text-align: center;
+    margin: 20px 0px;
+}
+
+.search-field-div{
+    text-align: center;
+    margin: 20px auto;
+}
+
+.search-input{
+    display: block;
+    margin: 10px auto;
+    width: 190px;
+    height: 28px;
+    border-radius: 19px;
+    text-align: center;
 }
 
 .book-details-grid-div{
@@ -25,32 +108,64 @@ h1, h2{
     gap: 10px;
 }
 
-button.logged-in{
-    background-color: blue;
-    color: white
+.book-update-div{
+    background-color: white;
+    width: 56%;
+    padding: 0px 60px;
+    margin: auto;
+    border: solid 15px #515A20;
+    text-align: center;
 }
 
-button.not-logged-in{
+.logged-in-btn{
+    /* background-color: blue;
+    color: white */
+}
+
+.not-logged-in-btn{
     background-color: grey;
 }
 
-footer{
-    margin: 40px 0;
+.sign-up-forms{
+    background-color: white;
+    width: 28%;
+    padding: 20px;
+    margin: auto;
+    border: solid 15px #515A20;
 }
 
 .account-div{
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 0.9fr 3fr;
+    gap: 50px
 }
 
-.book-container-div{
+.account-menu-aside{
+    background-color: white;
+    border: solid 10px #515A20;
+    padding: 20px 20px;
+}
+
+.account-book-container-div{
     display: grid;
     grid-template-columns: 1fr 3fr;
     margin: 20px auto;
 }
 
-.login-btn{
-    width: 40px;
-    border: none;
-    background-color: transparent;
+.book-image-div{
+    text-align: center;
+}
+
+.finished-reading-form, .current-reading-form{
+    text-align: left;
+}
+
+.search-container-div{
+    display: grid;
+    grid-template-columns: 0.5fr 3fr;
+    margin: 20px auto;
+}
+
+.search-results-list{
+    list-style: none;
 }
