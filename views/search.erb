@@ -4,7 +4,8 @@
     <%books.each do |book|%>
         <li>
             <a href="/books/details/<%= book["id"] %>">
-                <%=book["volumeInfo"]["title"]%>
+                <p><%=book["volumeInfo"]["title" ]%></p>
+                <p> by <%=book["volumeInfo"]["authors"].to_s%></p>
             </a>
         </li>
     <%end%>

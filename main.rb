@@ -63,18 +63,12 @@ get '/books/details/:id' do
   # .join.gsub(" /", ",")
   bio = res["volumeInfo"]["description"]
   google_id = params["id"]
+  
+  if logged_in?
+    sql = "SELECT * FROM books_users WHERE user_id = #{current_user["id"]} AND book_id = '#{google_id}';"
 
-  sql = "INSERT INTO books (title, author, cover_image, rating, genre, bio, google_id) VALUES ($1, $2, $3, $4, $5, $6, $7);"
-
-  run_sql(sql, [
-    title,
-    author,
-    cover_image,
-    rating,
-    genre,
-    bio,
-    google_id
-    ])
+    records = run_sql(sql)
+  end
 
   erb :book_details, locals:{
     title: title,
@@ -83,7 +77,8 @@ get '/books/details/:id' do
     rating: rating,
     genre: genre,
     bio: bio,
-    google_id: google_id
+    google_id: google_id,
+    records: records
   }
 end
 
@@ -168,5 +163,79 @@ post '/books/want/:id' do
 
   redirect '/'
 end
+
+# my account page 
+get '/books/myaccount' do
+  if logged_in?
+    sql = "SELECT * FROM users WHERE id = #{session[:user_id]};"
+    records = run_sql(sql)
+    
+    erb :my_account, locals:{
+      users: current_user
+    }
+  else 
+    redirect '/books/login'
+  end
+end
+
+# want to read page 
+get '/books/want' do 
+  user_id = current_user["id"]
+
+  sql = "SELECT * FROM books_users WHERE user_id = #{user_id} AND book_status = 'want';"
+
+  records = run_sql(sql)
+  erb :want_to_read, locals: {
+    want_list: records
+  }
+end
+
+# move book to currently reading status
+put '/books/current/:book_id' do 
+  user_id = current_user["id"]
+  book_id = params["book_id"]
+  
+  sql = "UPDATE books_users SET book_status = 'current' WHERE user_id = #{user_id} AND book_id = '#{book_id}';"
+
+  run_sql(sql)
+end
+
+# currently reading page
+get '/books/current' do 
+  user_id = current_user["id"]
+
+  sql = "SELECT * FROM books_users WHERE user_id = #{user_id} AND book_status = 'current';"
+
+  records = run_sql(sql)
+  erb :current_read, locals: {
+    current_list: records
+  }
+end
+
+#move book to finished reading status
+put '/books/finished/:book_id' do 
+  user_id = current_user["id"]
+  book_id = params["book_id"]
+  
+  sql = "UPDATE books_users SET book_status = 'read' WHERE user_id = #{user_id} AND book_id = '#{book_id}';"
+
+  run_sql(sql)
+
+  redirect '/books/finished'
+end
+
+# finished reading page
+get '/books/finished' do 
+  user_id = current_user["id"]
+
+  sql = "SELECT * FROM books_users WHERE user_id = #{user_id} AND book_status = 'read';"
+
+  records = run_sql(sql)
+  erb :finished_read, locals: {
+    finished_list: records
+  }
+end
+
+
 
 

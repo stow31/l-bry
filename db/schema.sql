@@ -28,6 +28,8 @@ CREATE TABLE books_users(
     book_status TEXT
 );
 
+-- Book Status either : want, current or read 
+
 
 INSERT INTO books (title, author, rating, genre, bio) VALUES (
     'Malibu Rising',
@@ -45,3 +47,9 @@ ALTER TABLE books
 ADD google_id INTEGER;
 
 UPDATE books SET book_cover_image = 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1614630096l/53404196._SY475_.jpg' WHERE id = 1;
+
+INSERT INTO books_users (book_id, user_id, book_status) VALUES ( #{google_id}, #{session[:user_id]}, 'want')
+
+UPDATE books_users SET book_status = 'current' WHERE user_id = 1 AND book_id = 'rolgBAAAQBAJ';
+
+SELECT * FROM books_users WHERE user_id = 12 AND book_id = '#MNaczQEACAAJ';

@@ -3,21 +3,10 @@ body{
     font-family: Verdana, Geneva, Tahoma, sans-serif
 }
 
-/* .search-field{
-    margin: 25px auto;
-    text-align: center;
-}
-
-a:visited{
-    color: black;
-} */
-
-.grid{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 60%;
-    margin: 35px auto;
-    gap: 10px;
+header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 h1, h2{
@@ -28,14 +17,13 @@ h1, h2{
     font-weight: 900;
 }
 
-/* .get-movie-details-btn{
-    border-radius: 20px;
-    padding: 5px 20px;
-    display: block;
-    margin: 20px auto;
-    color: white;
-    background-color: black;
-} */
+.book-details-grid-div{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 60%;
+    margin: 35px auto;
+    gap: 10px;
+}
 
 button.logged-in{
     background-color: blue;
@@ -48,4 +36,21 @@ button.not-logged-in{
 
 footer{
     margin: 40px 0;
+}
+
+.account-div{
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+
+.book-container-div{
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    margin: 20px auto;
+}
+
+.login-btn{
+    width: 40px;
+    border: none;
+    background-color: transparent;
 }

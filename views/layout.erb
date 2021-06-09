@@ -10,12 +10,14 @@
   <header>
     <nav>
       <a href="/">Home</a>
-          
-
     </nav>
+
+    <h1>L-Bry</h1>
+
+    <section>
       <% if logged_in?%>
 
-        Logged in as <%=current_user()["first_name"]%>
+        Logged in as <a href="/books/myaccount"><%=current_user()["first_name"]%></a>
 
         <form action="/books/session" method="post">
           <input type="hidden" name="_method" value="delete">
@@ -23,11 +25,15 @@
         </form>
 
       <%else%>
-          <button>
-            <a href="/books/login">Login</a>
+      
+          <button class="login-btn">
+            <a  href="/books/login">
+              <img style="width:100%" src="https://image.flaticon.com/icons/png/512/747/747376.png" alt="">
+            </a>
           </button>
+
       <% end %>
-    <h1>L-Bry</h1>
+    </section>
 
   </header>
 

@@ -1,4 +1,4 @@
-<div class="grid">
+<div class="book-details-grid-div">
     <div class="col1">
         <img src="<%= cover_image %>" alt="">
     </div>
@@ -13,11 +13,24 @@
 
         <% if logged_in?%>
 
-            <form action="/books/want/<%= google_id %>" method="post">
-                <button class="logged-in">
-                    Want to Read
-                </button>
-            </form>
+            <%if records.count>0%>
+                <% if records[0]["book_status"] == 'want' %>
+                    <p>You want to read this book</p>
+                <% elsif records[0]["book_status"] == 'current' %>
+                    <p>You are currently reading</p>
+                <% elsif records[0]["book_status"] == 'read' %>
+                    <p>You have read this book</p>
+                <% end %>
+
+            <%else%>
+
+                <form action="/books/want/<%= google_id %>" method="post">
+                    <button class="logged-in">
+                        Want to Read
+                    </button>
+                </form>
+
+            <% end %>
 
         <%else%>
 

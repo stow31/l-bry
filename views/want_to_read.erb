@@ -1,0 +1,30 @@
+<h2>Want to read list</h2>
+
+<div class="account-div">
+    <aside class="account-aside">
+        <p><a href="/books/current">Currently Reading</a></p>
+        <p><a href="/books/want">Want to Read</a></p>
+        <p><a href="/books/finished">Books you've read</a></p>
+        <p><a href="/books/myaccount">My Account</a></p>
+    </aside>
+
+    <main class="account-main">
+        <% want_list.each do |book| %>
+            <div class="book-container-div">
+                <div class="book-image-div">
+                    <img src="<%= one_book(book["book_id"])["volumeInfo"]["imageLinks"]["smallThumbnail"] %>" alt="">
+                </div>
+                <div class="book-desc-div">
+                    <p><%= one_book(book["book_id"])["volumeInfo"]["title"] %></p>
+                    <p>By <%= one_book(book["book_id"])["volumeInfo"]["authors"].join %></p>
+
+                    <form action="/books/current/<%= book["book_id"] %>" method="post">
+                        <input type="hidden" name="_method" value="put">
+                        <button>Add to currently reading</button>
+                    </form>
+                </div>
+            </div>
+        <% end %>
+
+    </main>
+</div>
