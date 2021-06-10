@@ -11,30 +11,33 @@
     </aside>
 
     <main class="account-main">
-        <% want_list.each do |book| %>
-            <div class="account-book-container-div">
-                <div class="book-image-div">
-                    <img class="account-book-img" src="<%= one_book(book["book_id"])["volumeInfo"]["imageLinks"]["smallThumbnail"] %>" alt="">
+        <% if want_list.count>0 %>
+            <% want_list.each do |book| %>
+                <div class="account-book-container-div">
+                    <div class="book-image-div">
+                        <img class="account-book-img" src="<%= one_book(book["book_id"])["volumeInfo"]["imageLinks"]["smallThumbnail"] %>" alt="">
+                    </div>
+                    <div class="book-desc-div">
+                        <a href="/books/details/<%= book["book_id"]%>">       
+                            <p><%= one_book(book["book_id"])["volumeInfo"]["title"] %></p>
+                            <p>By <%= one_book(book["book_id"])["volumeInfo"]["authors"].join %></p>
+                        </a>
+
+                        <form class="current-reading-form" action="/books/current/<%= book["book_id"] %>" method="post">
+                            <input type="hidden" name="_method" value="put">
+                            <button>Add to currently reading</button>
+                        </form>
+
+                        <form class="delete-book-form" action="/books/<%= book["book_id"] %>" method="post">
+                            <input type="hidden" name="_method" value="delete">
+                            <button>Delete</button>
+                        </form>
+
+                    </div>
                 </div>
-                <div class="book-desc-div">
-                    <a href="/books/details/<%= book["book_id"]%>">       
-                        <p><%= one_book(book["book_id"])["volumeInfo"]["title"] %></p>
-                        <p>By <%= one_book(book["book_id"])["volumeInfo"]["authors"].join %></p>
-                    </a>
-
-                    <form class="current-reading-form" action="/books/current/<%= book["book_id"] %>" method="post">
-                        <input type="hidden" name="_method" value="put">
-                        <button>Add to currently reading</button>
-                    </form>
-
-                    <form class="delete-book-form" action="/books/<%= book["book_id"] %>" method="post">
-                        <input type="hidden" name="_method" value="delete">
-                        <button>Delete</button>
-                    </form>
-
-                </div>
-            </div>
+            <% end %>
+        <% else %>
+            <p>You currently have no books on your want list</p>
         <% end %>
-
     </main>
 </div>
