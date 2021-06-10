@@ -11,6 +11,7 @@
     </aside>
 
     <main class="account-main">
+    <% if current_list.count>0 %>
         <% current_list.each do |book| %>
             <div class="account-book-container-div">
                 <div class="book-image-div">
@@ -35,6 +36,8 @@
                 </div>
             </div>
         <% end %>
-
+    <% else %>
+        <p>You currently aren't reading any books</p>
+    <% end %>
     </main>
 </div>
