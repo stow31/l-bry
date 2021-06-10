@@ -37,6 +37,7 @@ Only the clubs admin user can delete and invite people to the club.
 - Upload profile picture
 - Alert when the existing user has been added to your club
 - Have to enter a name when inputing the club name
+- Cross check between if a book as been read in book club add it to your personal read list.
 
 ### Plan Break Down
 

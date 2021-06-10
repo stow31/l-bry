@@ -94,7 +94,6 @@ get '/books/details/:id' do
     clubs_sql = "SELECT * FROM books_clubs WHERE book_id = $1;"
     # all the records of the book club books
     club_book_records = run_sql(clubs_sql, [book_id]);
-
   end
 
   erb :book_details, locals:{
@@ -251,7 +250,7 @@ end
 #move book to finished reading status
 put '/books/finished/:id' do 
   user_id = current_user["id"]
-  book_id = params["book_id"]
+  book_id = params["id"]
   
   sql = "UPDATE books_users SET book_status = 'read' WHERE user_id = #{user_id} AND book_id = '#{book_id}';"
 

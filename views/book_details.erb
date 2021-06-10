@@ -53,11 +53,10 @@
                 <h3>Book Club Details</h3>
                     <% club_list_arr.each do |club_id| %>
                             
-                            <% if  club_book_records %>
-                                
+                            <% if  club_book_records.count>0 %>
                                 <%  club_book_records.each do |book_details| %>
 
-                                    <% if book_details["book_id"] == book_id && book_details["club_id"] == club_id%>
+                                    <% if book_details["club_id"] == club_id%>
                                         <p>This book is already on a list</p>
                                     <% else %>
                                         <form class="add-to-club-form" action="/books/club/add/<%= club_id.to_i %>/<%= book_id %>" method="post">
@@ -66,6 +65,12 @@
                                     <% end %>
 
                                 <% end %>
+
+                            <% else %>
+
+                                <form class="add-to-club-form" action="/books/club/add/<%= club_id.to_i %>/<%= book_id %>" method="post">
+                                    <button>Add to <span class="bold"><%= club_details(club_id.to_i)["club_name"]%></span> club want to read list</button>
+                                </form>
 
                             <% end %>
 
