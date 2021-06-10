@@ -56,23 +56,23 @@
                             <% if  club_id.to_i == book_record["club_id"].to_i%>
                                 <% if book_record["book_status"] == 'want' %>
                                     <p>This book is listed in your <%= club_details(club_id.to_i)["club_name"]%> club as want to read</p>
-                                <% elsif book_record["book_status"] == 'read' %>
-                                    <p>This book is  listed in your <%= club_details(club_id.to_i)["club_name"]%> club as reading</p>
                                 <% elsif book_record["book_status"] == 'current' %>
+                                    <p>This book is  listed in your <%= club_details(club_id.to_i)["club_name"]%> club as reading</p>
+                                <% elsif book_record["book_status"] == 'read' %>
                                     <p>This book is listed in your <%= club_details(club_id.to_i)["club_name"]%> club as read.</p>         
                                 <% else %>
-                                    <form class="add-to-club-form" action="">
+                                    <form class="add-to-club-form" action="/books/club/add/<%= club_id.to_i %>/<%= book_id %>" method="post">
                                         <button>Add to <span class="bold"><%= club_details(club_id.to_i)["club_name"]%></span> club want to read list</button>
                                     </form>
                                 <% end %>
                             <% else %>
-                                <form class="add-to-club-form" action="">
+                                <form class="add-to-club-form" action="/books/club/add/<%= club_id.to_i %>/<%= book_id %>" method="post">
                                     <button>Add to <span class="bold"><%= club_details(club_id.to_i)["club_name"]%></span> club want to read list</button>
                                 </form>
                             <% end %>
                         <% end %>
                     <% else %>
-                        <form class="add-to-club-form" action="">
+                        <form class="add-to-club-form" action="/books/club/add/<%= club_id.to_i %>/<%= book_id %>" method="post">
                             <button>Add to <span class="bold"><%= club_details(club_id.to_i)["club_name"]%></span> club want to read list</button>
                         </form>                        
                     <% end %>

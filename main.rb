@@ -286,7 +286,7 @@ delete '/books/:id' do
 end
 
 # clubs main page with list of clubs and create clubs input 
-get '/books/clubs' do
+get '/books/club' do
 
   if logged_in?
     user_id = current_user["id"]
@@ -305,7 +305,7 @@ get '/books/clubs' do
 
 end
 
-get '/books/clubs/help' do 
+get '/books/club/help' do 
   erb :clubs_help
 end
 
@@ -448,3 +448,15 @@ put '/books/club/finished/:club_id/:book_id' do
   redirect request.referrer
 end
 
+# add books to want to read list
+post '/books/club/add/:club_id/:book_id' do 
+  club_id = params["club_id"]
+  book_id = params["book_id"]
+
+  sql = "INSERT INTO books_clubs(book_id, club_id, book_status) VALUES ($1, $2, 'want');"
+
+  run_sql(sql, [book_id, club_id])
+
+  redirect request.referrer
+
+end

@@ -77,4 +77,8 @@ CREATE TABLE books_clubs(
 INSERT INTO clubs (club_name, admin_user_id) VALUES ('Friends from Uni', 1);
 INSERT INTO clubs (club_name, admin_user_id) VALUES ('My Dog Friends', 3);
 
-INSERT INTO books_clubs (book_id, club_id, book_status) VALUES ('H-F_DwAAQBAJ', 1, 'want');
+INSERT INTO books_clubs (book_id, club_id, book_status) VALUES ('H-F_DwAAQBAJ', 37, 'want');
+INSERT INTO books_clubs (book_id, club_id, book_status) VALUES ('RKUkEAAAQBAJ', 34, 'want');
+INSERT INTO books_clubs (book_id, club_id, book_status) VALUES ('M9tARpafXOIC', 34, 'want');
+
+
