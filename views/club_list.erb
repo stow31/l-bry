@@ -14,6 +14,7 @@
 <main class="account-main">
 
     <form class="new-club-form" action="/books/club/new" method="post">
+        <input type="hidden" name="_method" value="put">
         <input type="text" name="club_name" placeholder="Create a new bookclub">
         <button>
             Create
@@ -32,10 +33,13 @@
                         </a>
                     
                         <%if admin?(club_id.to_i)%>
+                            <p class="admin-text-detail">You are admin if this club</p>
                             <form class="delete-club-form" action="/books/club/delete/<%=club_id.to_i%>" method="post">
                                 <input type="hidden" name="_method" value="delete">
                                 <button>Delete</button>
                             </form>
+                        <%else%>
+                            <p class="admin-text-detail">Someone else is admin of this club</p>
                         <%end%>
                     </div>
                 </li>

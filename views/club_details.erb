@@ -13,6 +13,7 @@
     <main class="account-main">
         <% if admin?(club["id"]) %>
             <form class="add-user-to-club-form" action="/books/club/new_member/<%= club["id"] %>" method="post">
+                <input type="hidden" name="_method" value="put">
                 <input type="email" name="email" placeholder="Enter new members email address">
                 <button>Invite User</button>
             </form>

@@ -88,9 +88,11 @@ get '/books/details/:id' do
     sql = "SELECT * FROM books_users WHERE user_id = #{current_user["id"]} AND book_id = '#{book_id}';"
     records = run_sql(sql)
 
+    # A list of clubs the user is a part of
     club_list_arr = list_user_clubs(current_user["id"])&.split(",")
 
     clubs_sql = "SELECT * FROM books_clubs WHERE book_id = $1;"
+    # all the records of the book club books
     club_book_records = run_sql(clubs_sql, [book_id]);
 
   end
@@ -308,7 +310,7 @@ get '/books/club/help' do
 end
 
 # create new club, add to clubs db and add to users list
-post '/books/club/new' do
+put '/books/club/new' do
   club_name = params["club_name"]
   user_id = current_user["id"]
 
@@ -342,21 +344,47 @@ delete '/books/club/delete/:id' do
   user_id = current_user["id"]
 
   # getting the current users clubs
-  user_current_clubs = list_user_clubs(user_id).split(",")
+  user_current_clubs = list_user_clubs(user_id)&.split(",")
 
   # finding and removing the club that is being deleted
-  if user_current_clubs.count >1
-    club_index = user_current_clubs.index("#{club_id}")
-    user_current_clubs.delete_at(club_index)
-    user_updated_clubs = user_current_clubs.join(",")
+  # if user_current_clubs.count >1
+  #   club_index = user_current_clubs.index("#{club_id}")
+  #   user_current_clubs.delete_at(club_index)
+  #   user_updated_clubs = user_current_clubs.join(",")
 
-    sql_update = "UPDATE users SET clubs = '#{user_updated_clubs}' WHERE id = #{user_id};"
+  #   sql_update = "UPDATE users SET clubs = '#{user_updated_clubs}' WHERE id = #{user_id};"
 
-    run_sql(sql_update)
-  else
-    sql_update = "UPDATE users SET clubs = NULL  WHERE id = #{user_id};"
+  #   run_sql(sql_update)
+  # else
+  #   sql_update = "UPDATE users SET clubs = NULL  WHERE id = #{user_id};"
 
-    run_sql(sql_update)
+  #   run_sql(sql_update)
+  # end
+
+  # getting all the users clubs
+  sql_all = "SELECT * FROM users";
+  rec_all =  run_sql(sql_all)
+
+  rec_all.each do |user|
+    user_club_arr = user["clubs"]&.split(",")
+
+    if user_club_arr
+      if user_club_arr.include?(club_id)
+        if user_club_arr.count >1
+          club_index = user_current_clubs.index("#{club_id}")
+          user_current_clubs.delete_at(club_index)
+          user_updated_clubs = user_current_clubs.join(",")
+      
+          sql_update = "UPDATE users SET clubs = '#{user_updated_clubs}' WHERE id = #{user["id"]};"
+      
+          run_sql(sql_update)
+        else
+          sql_update = "UPDATE users SET clubs = NULL  WHERE id = #{user["id"]};"
+      
+          run_sql(sql_update)
+        end
+      end
+    end
   end
 
   # deleting the club from the clubs table 
@@ -388,8 +416,8 @@ get '/books/club_details/:id' do
   }
 end
 
-# add an existing user to your book club
-post '/books/club/new_member/:id' do
+# add an existing user of your app to your book club
+put '/books/club/new_member/:id' do
   club_id = params["id"]
   email = params["email"]
 
@@ -458,3 +486,25 @@ post '/books/club/add/:club_id/:book_id' do
   redirect request.referrer
 
 end 
+
+get '/books/password' do
+  if logged_in?
+    erb :new_password
+  else
+    redirect '/books/signup'
+  end
+end
+
+put '/books/new-password' do
+
+  user_id = current_user["id"]
+  user_new_password = params["password"]
+
+  password_digest = BCrypt::Password.create(user_new_password)
+
+  sql_update_pw = "UPDATE users SET password_digest = $1 WHERE id = $2"
+
+  run_sql(sql_update_pw, [password_digest, user_id])
+
+  redirect '/books/myaccount'
+end

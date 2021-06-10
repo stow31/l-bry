@@ -152,6 +152,14 @@ a.details-login-link:hover{
     border: solid 15px #515A20;
 }
 
+.change-password-forms{
+    margin: 20px;
+    background-color: white;
+    width: 35%;
+    padding: 20px;
+    border: solid 15px #515A20;
+}
+
 .account-div{
     display: grid;
     grid-template-columns: 0.9fr 2fr;
@@ -226,5 +234,9 @@ a.details-login-link:hover{
 
 .delete-club-form{
     text-align: left;
+}
+
+.admin-text-detail{
+    font-size: 11px;
 }
 
