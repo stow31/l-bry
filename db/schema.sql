@@ -55,3 +55,26 @@ UPDATE books_users SET book_status = 'current' WHERE user_id = 1 AND book_id = '
 SELECT * FROM books_users WHERE user_id = 12 AND book_id = '#MNaczQEACAAJ';
 
 DELETE FROM dishes WHERE id = 2;
+
+-- Club Details
+
+ALTER TABLE users
+ADD clubs TEXT;
+
+CREATE TABLE clubs(
+    id SERIAL PRIMARY KEY,
+    club_name TEXT,
+    admin_user_id INTEGER
+);
+
+CREATE TABLE clubs_users(
+    id SERIAL PRIMARY KEY,
+    book_id TEXT,
+    club_id INTEGER,
+    book_status TEXT
+);
+
+INSERT INTO clubs (club_name, admin_user_id) VALUES ('Friends from Uni', 1);
+INSERT INTO clubs (club_name, admin_user_id) VALUES ('My Dog Friends', 3);
+
+INSERT INTO clubs_users (book_id, club_id, book_status) VALUES ('H-F_DwAAQBAJ', 1, 'want');

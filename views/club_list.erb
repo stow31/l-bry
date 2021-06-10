@@ -1,0 +1,44 @@
+<h2>Club List</h2>
+
+<div class="account-div">
+    <aside class="account-menu-aside">
+        <p><a href="/books/want">Want to Read</a></p>
+        <p><a href="/books/current">Currently Reading</a></p>
+        <p><a href="/books/finished">Books you've read</a></p>
+        <p><a href="/books/clubs">Clubs</a></p>
+        <p><a href="/books/myaccount">My Account</a></p>
+    </aside>
+
+
+<main class="account-main">
+
+    <form class="new-club-form" action="/books/club/new" method="post">
+        <input type="text" name="club_name" placeholder="Create a new bookclub">
+        <button>
+            Create
+        </button>
+    </form>
+
+    <% if clubs%>
+        <% clubs&.each do |club_id|%>
+            <div class="club-list-div">
+                <a href="/books/club_details/<%=club_id.to_i%>">
+                    <p>
+                        <%= club_details(club_id.to_i)["club_name"]%>
+                    </p>
+                </a>
+            
+                <%if admin?(club_id.to_i)%>
+                    <form class="delete-club-form" action="/books/club/delete/<%=club_id.to_i%>" method="post">
+                        <input type="hidden" name="_method" value="delete">
+                        <button>Delete</button>
+                    </form>
+                <%end%>
+            </div>
+    <%end%>
+    <% else %>
+        <p> you don't have any clubs add one!
+    <% end %>
+</main>
+
+</div>

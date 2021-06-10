@@ -1,0 +1,20 @@
+<h2><%= club["club_name"] %></h2>
+
+<div class="account-div">
+    <aside class="account-menu-aside">
+        <p><a href="/books/want">Want to Read</a></p>
+        <p><a href="/books/current">Currently Reading</a></p>
+        <p><a href="/books/finished">Books you've read</a></p>
+        <p><a href="/books/clubs">Clubs</a></p>
+        <p><a href="/books/myaccount">My Account</a></p>
+    </aside>
+
+    <main class="account-main">
+        <% if admin?(club["id"]) %>
+            <form class="add-user-to-club-form" action="/books/club/new_member/<%= club["id"] %>" method="post">
+                <input type="email" name="email" placeholder="Enter new members email address">
+                <button>Invite User</button>
+            </form>
+        <% end %>
+    </main>
+</div>

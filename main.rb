@@ -36,6 +36,26 @@ def one_book(id)
   return HTTParty.get(url)
 end
 
+def club_details(club_id)
+  sql = "SELECT * FROM clubs where id = #{club_id}"
+  return run_sql(sql)[0]
+end
+
+def list_user_clubs(user_id)
+  sql_current_clubs = "SELECT * FROM users WHERE id = #{user_id}"
+  user_records = run_sql(sql_current_clubs)
+  return user_records[0]["clubs"]
+end
+
+def admin?(club_id)
+  user_id = current_user["id"]
+
+  if user_id == club_details(club_id)["admin_user_id"]
+    return true
+  end
+  return false
+end
+
 # HTTP METHODS
 
 get '/' do
@@ -243,6 +263,7 @@ get '/books/finished' do
   }
 end
 
+# delete book from your want to or currently reading list
 delete '/books/:id' do
   user_id = current_user["id"]
   book_id = params["id"]
@@ -253,6 +274,116 @@ delete '/books/:id' do
 
   redirect request.referrer
   
+end
+
+# clubs main page with list of clubs and create clubs input 
+get '/books/clubs' do
+
+  if logged_in?
+    user_id = current_user["id"]
+
+    sql = "SELECT * FROM users WHERE id = #{user_id};"
+    records = run_sql(sql)
+    clubs_arr = records[0]["clubs"]&.split(",")
+    
+  erb :club_list, locals: {
+    clubs: clubs_arr
+  }
+
+  else
+    redirect '/books/login'
+  end
+
+end
+
+# create new club, add to clubs db and add to users list
+post '/books/club/new' do
+  club_name = params["club_name"]
+  user_id = current_user["id"]
+
+  # inserting the club into clubs table
+  sql_insert_club = "INSERT INTO clubs(club_name, admin_user_id) VALUES ($1, $2);"
+  run_sql(sql_insert_club, [club_name, user_id])
+
+  # getting the new clubs id
+  sql_club_id = "SELECT * FROM clubs WHERE club_name = '#{club_name}';"
+  club_records = run_sql(sql_club_id);
+  new_club_id = club_records [0]["id"]
+
+  # getting the current clubs the user is in
+  user_current_clubs = list_user_clubs(user_id)
+
+  # ammending the current list to add the new club
+  if user_current_clubs
+    sql_update_user_clubs = "UPDATE users SET clubs = CONCAT('#{user_current_clubs}', ',#{new_club_id}') WHERE id = #{user_id}; "
+  else
+    sql_update_user_clubs = "UPDATE users SET clubs = '#{new_club_id}' WHERE id = #{user_id}; "
+  end
+
+  run_sql(sql_update_user_clubs)
+
+  redirect request.referrer
+end
+
+# delete book clubs from the db
+delete '/books/club/delete/:id' do
+  club_id = params["id"]
+  user_id = current_user["id"]
+
+  # getting the current users clubs
+  user_current_clubs = list_user_clubs(user_id).split(",")
+
+  # finding and removing the club that is being deleted
+  if user_current_clubs.count >1
+    club_index = user_current_clubs.index("#{club_id}")
+    user_current_clubs.delete_at(club_index)
+    user_updated_clubs = user_current_clubs.join(",")
+
+    sql_update = "UPDATE users SET clubs = '#{user_updated_clubs}' WHERE id = #{user_id};"
+
+    run_sql(sql_update)
+  else
+    sql_update = "UPDATE users SET clubs = NULL  WHERE id = #{user_id};"
+
+    run_sql(sql_update)
+  end
+
+  # deleting the club from the clubs table 
+  sql_delete_club = "DELETE FROM clubs WHERE id = #{club_id};"
+  run_sql(sql_delete_club)
+
+  redirect request.referrer
+
+end
+
+# club details page
+get '/books/club_details/:id' do
+  club_id = params["id"]
+  
+  erb :club_details, locals:{
+    club: club_details(club_id)
+  }
+end
+
+post '/books/club/new_member/:id' do
+  club_id = params["id"]
+  email = params["email"]
+
+  sql_check_email = "SELECT * FROM users WHERE email = $1"
+  user_record = run_sql(sql_check_email, [email])
+  binding.pry
+  
+  if user_record.count>0
+    club_list = list_user_clubs(user_record["id"])
+    # ammending the current list to add the new club
+    if club_list #if club list is nil or not
+      sql_update_user_clubs = "UPDATE users SET clubs = CONCAT('#{club_list}', ',#{club_id}') WHERE id = #{user_record["id"]}; "
+    else
+      sql_update_user_clubs = "UPDATE users SET clubs = '#{club_id}' WHERE id = #{user_record["id"]}; "
+    end
+  end
+
+  redirect request.referrer
 end
 
 
