@@ -22,7 +22,7 @@
 
     <% if clubs%>
         <ol>
-            <% clubs&.each do |club_id|%>
+            <% clubs.each do |club_id|%>
                 <li>
                     <div class="club-list-div">
                         <a href="/books/club_details/<%=club_id.to_i%>">

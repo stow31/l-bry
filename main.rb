@@ -89,9 +89,9 @@ get '/books/details/:id' do
     sql = "SELECT * FROM books_users WHERE user_id = #{current_user["id"]} AND book_id = '#{book_id}';"
     records = run_sql(sql)
 
-    club_list_arr = list_user_clubs(current_user["id"]).split(",")
+    club_list_arr = list_user_clubs(current_user["id"])&.split(",")
 
-  
+    binding.pry
     clubs_sql = "SELECT * FROM books_clubs WHERE book_id = $1;"
     club_book_records = run_sql(clubs_sql, [book_id]);
 
@@ -459,4 +459,4 @@ post '/books/club/add/:club_id/:book_id' do
 
   redirect request.referrer
 
-end
+end 

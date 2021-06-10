@@ -14,5 +14,6 @@ password_digest = BCrypt::Password.create(password)
 sql = "INSERT INTO users (email, password_digest, first_name, last_name) VALUES ('#{email}', '#{password_digest}', '#{first_name}', '#{last_name}');"
 
 # run_sql(sql)
+run_sql(sql)
 
 # CREATE USER END
