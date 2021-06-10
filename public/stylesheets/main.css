@@ -166,7 +166,7 @@ a.details-login-link:hover{
     padding: 20px 20px;
 }
 
-.account-book-container-div{
+.account-book-container-div, .club-book-container-div{
     display: grid;
     grid-template-columns: 1fr 3fr;
     margin: 25px auto;
@@ -209,7 +209,10 @@ a.details-login-link:hover{
 }
 
 .new-club-form input{
+    display: block;
     margin: 10px 0;
+    width: 250px;
+    padding: 10px 15px;
 }
 
 .club-list-div{

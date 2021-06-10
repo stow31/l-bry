@@ -6,6 +6,7 @@
         <p><a href="/books/current">Currently Reading</a></p>
         <p><a href="/books/finished">Books you've read</a></p>
         <p><a href="/books/clubs">Clubs</a></p>
+        <p><a href="/books/clubs/help">How to use clubs</a></p>
         <p><a href="/books/myaccount">My Account</a></p>
     </aside>
 
@@ -20,24 +21,28 @@
     </form>
 
     <% if clubs%>
-        <% clubs&.each do |club_id|%>
-            <div class="club-list-div">
-                <a href="/books/club_details/<%=club_id.to_i%>">
-                    <p>
-                        <%= club_details(club_id.to_i)["club_name"]%>
-                    </p>
-                </a>
-            
-                <%if admin?(club_id.to_i)%>
-                    <form class="delete-club-form" action="/books/club/delete/<%=club_id.to_i%>" method="post">
-                        <input type="hidden" name="_method" value="delete">
-                        <button>Delete</button>
-                    </form>
-                <%end%>
-            </div>
-    <%end%>
+        <ol>
+            <% clubs&.each do |club_id|%>
+                <li>
+                    <div class="club-list-div">
+                        <a href="/books/club_details/<%=club_id.to_i%>">
+                            <p>
+                                <%= club_details(club_id.to_i)["club_name"]%>
+                            </p>
+                        </a>
+                    
+                        <%if admin?(club_id.to_i)%>
+                            <form class="delete-club-form" action="/books/club/delete/<%=club_id.to_i%>" method="post">
+                                <input type="hidden" name="_method" value="delete">
+                                <button>Delete</button>
+                            </form>
+                        <%end%>
+                    </div>
+                </li>
+            <%end%>
+        </ol>
     <% else %>
-        <p> you don't have any clubs add one!
+        <p> you don't have any clubs, add one!
     <% end %>
 </main>
 

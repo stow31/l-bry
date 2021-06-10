@@ -46,7 +46,17 @@
 
         </ul>
 
-        
+        <% if club_list_arr.count > 0 && club_book_records.count > 0%>
+
+            <% club_list_arr.each do |club_id| %>
+                <% club_book_records.each do |book_record|%>
+                    <% if  club_id.to_i = book_record["club_id"].to_i%>
+                        <p>This book is in your <%= club_details(club_id.to_i)["club_name"]%> </p>
+                    <% end %>
+                <% end %>
+            <% end %>
+
+        <%end%>
 
     </div>
 </div>

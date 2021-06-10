@@ -72,7 +72,7 @@ get '/books/search' do
   }
 end
 
-# individual book detail page & add the book clicked to the DB
+# individual book detail page
 get '/books/details/:id' do
 
   res = one_book(params["id"])
@@ -88,6 +88,13 @@ get '/books/details/:id' do
   if logged_in?
     sql = "SELECT * FROM books_users WHERE user_id = #{current_user["id"]} AND book_id = '#{book_id}';"
     records = run_sql(sql)
+
+    club_list_arr = list_user_clubs(current_user["id"]).split(",")
+
+  
+    clubs_sql = "SELECT * FROM books_clubs WHERE book_id = $1;"
+    club_book_records = run_sql(clubs_sql, [book_id]);
+
   end
 
   erb :book_details, locals:{
@@ -98,7 +105,9 @@ get '/books/details/:id' do
     genre: genre,
     bio: bio,
     book_id: book_id,
-    records: records
+    records: records,
+    club_list_arr: club_list_arr,
+    club_book_records: club_book_records
   }
 end
 
@@ -296,6 +305,10 @@ get '/books/clubs' do
 
 end
 
+get '/books/clubs/help' do 
+  erb :clubs_help
+end
+
 # create new club, add to clubs db and add to users list
 post '/books/club/new' do
   club_name = params["club_name"]
@@ -359,29 +372,45 @@ end
 # club details page
 get '/books/club_details/:id' do
   club_id = params["id"]
-  
+
+  sql_want = "SELECT * FROM books_clubs WHERE club_id = #{club_id} AND book_status = 'want';"
+  want_list = run_sql(sql_want)
+
+  sql_current = "SELECT * FROM books_clubs WHERE club_id = #{club_id} AND book_status = 'current';"
+  current_list = run_sql(sql_current)
+
+  sql_read = "SELECT * FROM books_clubs WHERE club_id = #{club_id} AND book_status = 'read';"
+  read_list = run_sql(sql_read)
+
   erb :club_details, locals:{
-    club: club_details(club_id)
+    club: club_details(club_id),
+    want_list: want_list,
+    current_list: current_list,
+    read_list: read_list
   }
 end
 
+# add an existing user to your book club
 post '/books/club/new_member/:id' do
   club_id = params["id"]
   email = params["email"]
 
   sql_check_email = "SELECT * FROM users WHERE email = $1"
   user_record = run_sql(sql_check_email, [email])
-  binding.pry
   
   if user_record.count>0
-    club_list = list_user_clubs(user_record["id"])
+    club_list = list_user_clubs(user_record[0]["id"])
+
     # ammending the current list to add the new club
     if club_list #if club list is nil or not
-      sql_update_user_clubs = "UPDATE users SET clubs = CONCAT('#{club_list}', ',#{club_id}') WHERE id = #{user_record["id"]}; "
+      sql_update_user_clubs = "UPDATE users SET clubs = CONCAT('#{club_list}', ',#{club_id}') WHERE id = #{user_record[0]["id"]}; "
     else
-      sql_update_user_clubs = "UPDATE users SET clubs = '#{club_id}' WHERE id = #{user_record["id"]}; "
+      sql_update_user_clubs = "UPDATE users SET clubs = '#{club_id}' WHERE id = #{user_record[0]["id"]}; "
     end
+
+    run_sql(sql_update_user_clubs)
   end
+  # TODO Alert when the user doens't exist ?
 
   redirect request.referrer
 end
