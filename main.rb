@@ -63,12 +63,11 @@ get '/books/details/:id' do
   rating = res["volumeInfo"]["averageRating"]
   genre = res["volumeInfo"]["categories"]&.join&.gsub(" /", ",")
   bio = res["volumeInfo"]["description"]
-  google_id = params["id"]
+  book_id = params["id"]
   
   if logged_in?
-    sql = "SELECT * FROM books_users WHERE user_id = #{current_user["id"]} AND book_id = '#{google_id}';"
+    sql = "SELECT * FROM books_users WHERE user_id = #{current_user["id"]} AND book_id = '#{book_id}';"
     records = run_sql(sql)
-
   end
 
   erb :book_details, locals:{
@@ -78,7 +77,7 @@ get '/books/details/:id' do
     rating: rating,
     genre: genre,
     bio: bio,
-    google_id: google_id,
+    book_id: book_id,
     records: records
   }
 end
@@ -159,11 +158,11 @@ post '/books/new_session' do
 end
 
 # add book to your want to read list if logged in 
-# NOTE I AM USING THE GOOGLE_ID FOR THE JOIN HERE 
+# NOTE I AM USING THE book_id FOR THE JOIN HERE 
 post '/books/want/:id' do
-  google_id = params["id"]
+  book_id = params["id"]
 
-  sql_insert = "INSERT INTO books_users (book_id, user_id, book_status) VALUES ( '#{google_id}', #{session[:user_id]}, 'want');"
+  sql_insert = "INSERT INTO books_users (book_id, user_id, book_status) VALUES ( '#{book_id}', #{session[:user_id]}, 'want');"
 
   run_sql(sql_insert)
 
@@ -197,9 +196,9 @@ get '/books/want' do
 end
 
 # move book to currently reading status
-put '/books/current/:book_id' do 
+put '/books/current/:id' do 
   user_id = current_user["id"]
-  book_id = params["book_id"]
+  book_id = params["id"]
   
   sql = "UPDATE books_users SET book_status = 'current' WHERE user_id = #{user_id} AND book_id = '#{book_id}';"
 
@@ -221,7 +220,7 @@ get '/books/current' do
 end
 
 #move book to finished reading status
-put '/books/finished/:book_id' do 
+put '/books/finished/:id' do 
   user_id = current_user["id"]
   book_id = params["book_id"]
   
@@ -244,6 +243,17 @@ get '/books/finished' do
   }
 end
 
+delete '/books/:id' do
+  user_id = current_user["id"]
+  book_id = params["id"]
+
+  sql = "DELETE FROM books_users WHERE user_id = #{user_id} AND book_id = '#{book_id}';"
+
+  run_sql(sql)
+
+  redirect request.referrer
+  
+end
 
 
 

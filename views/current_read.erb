@@ -24,6 +24,12 @@
                         <button>Finished Reading</button>
                     </form>
 
+                    <form class="delete-book-form" action="/books/<%= book["book_id"] %>" method="post">
+                        <input type="hidden" name="_method" value="delete">
+                        <button>Delete</button>
+                    </form>
+
+
                 </div>
             </div>
         <% end %>

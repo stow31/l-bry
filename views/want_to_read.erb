@@ -19,10 +19,17 @@
                         <p><%= one_book(book["book_id"])["volumeInfo"]["title"] %></p>
                         <p>By <%= one_book(book["book_id"])["volumeInfo"]["authors"].join %></p>
                     </a>
+
                     <form class="current-reading-form" action="/books/current/<%= book["book_id"] %>" method="post">
                         <input type="hidden" name="_method" value="put">
                         <button>Add to currently reading</button>
                     </form>
+
+                    <form class="delete-book-form" action="/books/<%= book["book_id"] %>" method="post">
+                        <input type="hidden" name="_method" value="delete">
+                        <button>Delete</button>
+                    </form>
+
                 </div>
             </div>
         <% end %>

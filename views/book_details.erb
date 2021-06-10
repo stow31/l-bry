@@ -4,13 +4,6 @@
     </div>
     <div class="col2">
         <h2><%= title %></h2>
-        <ul class="book-details-list">
-            <li><span class="bold">Author: </span><%= author %></li>
-            <li><span class="bold">Rating: </span><%= rating %></li>
-            <li><span class="bold">Genre: </span><%= rating %></li>
-            <li><span class="bold">Plot: </span><%= bio %></li>
-
-        </ul>
 
         <% if logged_in?%>
 
@@ -24,9 +17,10 @@
                         <p>You have <a href="/books/finished">read this book</a></p>
                     <% end %>
                 </div>
-            <%else%>
+                
+            <%else%>s
 
-                <form action="/books/want/<%= google_id %>" method="post">
+                <form action="/books/want/<%= book_id %>" method="post">
                     <button class="logged-in-btn">
                         Want to Read
                     </button>
@@ -36,10 +30,23 @@
 
         <%else%>
 
-            <button class="not-logged-in-btn">
-                <a href="/books/login">Want to Read</a>
-            </button>
+            <div class="not-loggedin-btn-div">
+                <button class="not-logged-in-btn">
+                    <a class="details-login-link" href="/books/login">Login to Manage Lists</a>
+                </button>
+            </div>
 
         <% end %>
+
+        <ul class="book-details-list">
+            <li><span class="bold">Author: </span><%= author %></li>
+            <li><span class="bold">Rating: </span><%= rating %></li>
+            <li><span class="bold">Genre: </span><%= rating %></li>
+            <li><span class="bold">Plot: </span><%= bio %></li>
+
+        </ul>
+
+        
+
     </div>
 </div>

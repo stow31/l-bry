@@ -18,7 +18,7 @@ CREATE TABLE books(
     rating DECIMAL,
     genre TEXT,
     bio TEXT,
-    google_id TEXT
+    book_id TEXT
 );
 
 CREATE TABLE books_users(
@@ -44,12 +44,14 @@ ADD book_cover_image TEXT;
 
 
 ALTER TABLE books
-ADD google_id INTEGER;
+ADD book_id INTEGER;
 
 UPDATE books SET book_cover_image = 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1614630096l/53404196._SY475_.jpg' WHERE id = 1;
 
-INSERT INTO books_users (book_id, user_id, book_status) VALUES ( #{google_id}, #{session[:user_id]}, 'want')
+INSERT INTO books_users (book_id, user_id, book_status) VALUES ( #{book_id}, #{session[:user_id]}, 'want')
 
 UPDATE books_users SET book_status = 'current' WHERE user_id = 1 AND book_id = 'rolgBAAAQBAJ';
 
 SELECT * FROM books_users WHERE user_id = 12 AND book_id = '#MNaczQEACAAJ';
+
+DELETE FROM dishes WHERE id = 2;

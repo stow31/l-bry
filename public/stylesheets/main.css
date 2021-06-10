@@ -130,13 +130,18 @@ form{
     text-align: center;
 }
 
-.logged-in-btn{
-    /* background-color: blue;
-    color: white */
+.not-loggedin-btn-div{
+    text-align: center;
 }
 
-.not-logged-in-btn{
-    background-color: grey;
+.details-login-link{
+    color: white !important;
+    text-decoration: none !important;
+}
+
+a.details-login-link:hover{
+    color: white !important;
+    text-decoration: none !important;
 }
 
 .sign-up-forms{
@@ -164,7 +169,7 @@ form{
 .account-book-container-div{
     display: grid;
     grid-template-columns: 1fr 3fr;
-    margin: 20px auto;
+    margin: 25px auto;
     gap: 30px
 }
 
@@ -174,6 +179,11 @@ form{
 
 .finished-reading-form, .current-reading-form{
     text-align: left;
+}
+
+.delete-book-form{
+    text-align: left;
+    margin-top: 15px;
 }
 
 .search-container-div{
