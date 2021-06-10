@@ -31,12 +31,12 @@
                             <p>By <%= one_book(book["book_id"])["volumeInfo"]["authors"].join %></p>
                         </a>
                         <% if admin?(club["id"]) %>
-                            <form class="finished-reading-form" action="/books/finished/<%= book["book_id"] %>" method="post">
+                            <form class="current-reading-form" action="/books/club/current/<%= club["id"] %>/<%= book["book_id"] %>" method="post">
                                 <input type="hidden" name="_method" value="put">
-                                <button>Finished Reading</button>
+                                <button>Currently Reading</button>
                             </form>
 
-                            <form class="delete-book-form" action="/books/<%= book["book_id"] %>" method="post">
+                            <form class="delete-book-form" action="/books/club/<%= club["id"] %>/<%= book["book_id"] %>" method="post">
                                 <input type="hidden" name="_method" value="delete">
                                 <button>Delete</button>
                             </form>
@@ -63,12 +63,12 @@
                             <p>By <%= one_book(book["book_id"])["volumeInfo"]["authors"].join %></p>
                         </a>
 
-                        <form class="finished-reading-form" action="/books/finished/<%= book["book_id"] %>" method="post">
+                        <form class="current-reading-form" action="/books/club/finished/<%= club["id"] %>/<%= book["book_id"] %>" method="post">
                             <input type="hidden" name="_method" value="put">
                             <button>Finished Reading</button>
                         </form>
 
-                        <form class="delete-book-form" action="/books/<%= book["book_id"] %>" method="post">
+                        <form class="delete-book-form" action="/books/club/<%= club["id"] %>/<%= book["book_id"] %>" method="post">
                             <input type="hidden" name="_method" value="delete">
                             <button>Delete</button>
                         </form>
@@ -94,18 +94,6 @@
                             <p><%= one_book(book["book_id"])["volumeInfo"]["title"] %></p>
                             <p>By <%= one_book(book["book_id"])["volumeInfo"]["authors"].join %></p>
                         </a>
-
-                        <form class="finished-reading-form" action="/books/finished/<%= book["book_id"] %>" method="post">
-                            <input type="hidden" name="_method" value="put">
-                            <button>Finished Reading</button>
-                        </form>
-
-                        <form class="delete-book-form" action="/books/<%= book["book_id"] %>" method="post">
-                            <input type="hidden" name="_method" value="delete">
-                            <button>Delete</button>
-                        </form>
-
-
                     </div>
                 </div>
             <%end%>

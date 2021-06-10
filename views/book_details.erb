@@ -46,17 +46,39 @@
 
         </ul>
 
-        <% if club_list_arr.count > 0 && club_book_records.count > 0%>
-
-            <% club_list_arr.each do |club_id| %>
-                <% club_book_records.each do |book_record|%>
-                    <% if  club_id.to_i = book_record["club_id"].to_i%>
-                        <p>This book is in your <%= club_details(club_id.to_i)["club_name"]%> </p>
+        <%# This is so messy it brings me nightmares %>
+        <div class="book-club-update-div">
+            <% if club_list_arr.count > 0 %>
+                <h3>Book Club Details</h3>
+                <% club_list_arr.each do |club_id| %>
+                    <% if club_book_records.count > 0%>
+                        <% club_book_records.each do |book_record|%>
+                            <% if  club_id.to_i == book_record["club_id"].to_i%>
+                                <% if book_record["book_status"] == 'want' %>
+                                    <p>This book is listed in your <%= club_details(club_id.to_i)["club_name"]%> club as want to read</p>
+                                <% elsif book_record["book_status"] == 'read' %>
+                                    <p>This book is  listed in your <%= club_details(club_id.to_i)["club_name"]%> club as reading</p>
+                                <% elsif book_record["book_status"] == 'current' %>
+                                    <p>This book is listed in your <%= club_details(club_id.to_i)["club_name"]%> club as read.</p>         
+                                <% else %>
+                                    <form class="add-to-club-form" action="">
+                                        <button>Add to <span class="bold"><%= club_details(club_id.to_i)["club_name"]%></span> club want to read list</button>
+                                    </form>
+                                <% end %>
+                            <% else %>
+                                <form class="add-to-club-form" action="">
+                                    <button>Add to <span class="bold"><%= club_details(club_id.to_i)["club_name"]%></span> club want to read list</button>
+                                </form>
+                            <% end %>
+                        <% end %>
+                    <% else %>
+                        <form class="add-to-club-form" action="">
+                            <button>Add to <span class="bold"><%= club_details(club_id.to_i)["club_name"]%></span> club want to read list</button>
+                        </form>                        
                     <% end %>
-                <% end %>
+                <% end%>
             <% end %>
-
-        <%end%>
+        </div>
 
     </div>
 </div>

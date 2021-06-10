@@ -67,7 +67,7 @@ CREATE TABLE clubs(
     admin_user_id INTEGER
 );
 
-CREATE TABLE clubs_users(
+CREATE TABLE books_clubs(
     id SERIAL PRIMARY KEY,
     book_id TEXT,
     club_id INTEGER,
@@ -77,4 +77,4 @@ CREATE TABLE clubs_users(
 INSERT INTO clubs (club_name, admin_user_id) VALUES ('Friends from Uni', 1);
 INSERT INTO clubs (club_name, admin_user_id) VALUES ('My Dog Friends', 3);
 
-INSERT INTO clubs_users (book_id, club_id, book_status) VALUES ('H-F_DwAAQBAJ', 1, 'want');
+INSERT INTO books_clubs (book_id, club_id, book_status) VALUES ('H-F_DwAAQBAJ', 1, 'want');

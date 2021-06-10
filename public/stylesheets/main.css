@@ -201,6 +201,11 @@ a.details-login-link:hover{
     margin-bottom: 40px;
 }
 
+.add-to-club-form{
+    text-align: left;
+    margin-bottom: 20px;
+}
+
 .add-user-to-club-form input{
     display: block;
     margin: 10px 0;

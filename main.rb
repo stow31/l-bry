@@ -415,5 +415,36 @@ post '/books/club/new_member/:id' do
   redirect request.referrer
 end
 
+# delete books from the book club list 
+delete '/books/club/:club_id/:book_id' do
+  club_id = params["club_id"]
+  book_id = params["book_id"]
 
+  sql = "DELETE FROM books_clubs WHERE club_id = $1 AND book_id = $2;"
+  run_sql(sql, [club_id, book_id])
+
+  redirect request.referrer
+end
+
+# move books in your book club from want to read to currently reading 
+put '/books/club/current/:club_id/:book_id' do
+  club_id = params["club_id"]
+  book_id = params["book_id"]
+
+  sql = "UPDATE books_clubs SET book_status = 'current' WHERE club_id = $1 AND book_id = $2;"
+  run_sql(sql, [club_id, book_id])
+
+  redirect request.referrer
+end
+
+# move books in your book club from currently reading to read
+put '/books/club/finished/:club_id/:book_id' do
+  club_id = params["club_id"]
+  book_id = params["book_id"]
+
+  sql = "UPDATE books_clubs SET book_status = 'read' WHERE club_id = $1 AND book_id = $2;"
+  run_sql(sql, [club_id, book_id])
+
+  redirect request.referrer
+end
 
