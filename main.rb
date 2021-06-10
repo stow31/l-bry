@@ -78,7 +78,7 @@ get '/books/details/:id' do
   
   title = res["volumeInfo"]["title"]
   cover_image = res["volumeInfo"]["imageLinks"]["thumbnail"]
-  author = res["volumeInfo"]["authors"]&.join
+  author = res["volumeInfo"]["authors"]&.join(" ")
   rating = res["volumeInfo"]["averageRating"]
   genre = res["volumeInfo"]["categories"]&.join&.gsub(" /", ",")
   bio = res["volumeInfo"]["description"]
