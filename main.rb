@@ -66,7 +66,6 @@ end
 get '/books/search' do
   search_book = params["search_books"]
   res = book_search(search_book)
-  # binding.pry
   erb :search, locals:{
     books: res["items"]
   }
@@ -91,7 +90,6 @@ get '/books/details/:id' do
 
     club_list_arr = list_user_clubs(current_user["id"])&.split(",")
 
-    binding.pry
     clubs_sql = "SELECT * FROM books_clubs WHERE book_id = $1;"
     club_book_records = run_sql(clubs_sql, [book_id]);
 
