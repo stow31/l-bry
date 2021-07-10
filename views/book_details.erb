@@ -46,36 +46,33 @@
 
         </ul>
 
-        <%# needs to be cleaned up %>
-        <%#  if the user is logged in and if they are a part of any clubs %>
-        <% if logged_in? && club_list_arr%>
+        <% if logged_in? && club_list%>
             <div class="book-club-update-div">
                 <h3>Book Club Details</h3>
-                    <% club_list_arr.each do |club_id| %>
-                            
-                            <% if  club_book_records.count>0 %>
-                                <%  club_book_records.each do |book_details| %>
-
-                                    <% if book_details["club_id"] == club_id%>
-                                        <p>This book is already on a list</p>
-                                    <% else %>
-                                        <form class="add-to-club-form" action="/books/club/add/<%= club_id.to_i %>/<%= book_id %>" method="post">
-                                            <button>Add to <span class="bold"><%= club_details(club_id.to_i)["club_name"]%></span> club want to read list</button>
-                                        </form>
-                                    <% end %>
-
+                    <% club_list.each do |club| %>  
+                        <% @book_status = ''%>    
+                        <span class="bold"><%= club["club_name"]%></span>
+                        <% book_recs_by_club.each do | book | %>
+                                <% if book["club_id"] == club["club_id"] %>
+                                    <% @book_status = book["book_status"] %>
                                 <% end %>
-
-                            <% else %>
-
-                                <form class="add-to-club-form" action="/books/club/add/<%= club_id.to_i %>/<%= book_id %>" method="post">
-                                    <button>Add to <span class="bold"><%= club_details(club_id.to_i)["club_name"]%></span> club want to read list</button>
-                                </form>
-
-                            <% end %>
-
+                        <% end %>
+                        <%if @book_status != '' %>
+                            <p>This book on the <span class="bold"><%= @book_status %></span> list</p>
+                        <% else %>
+                            <p></p>
+                            <form class="add-to-club-form" action="/books/club/add/<%= club["club_id"] %>/<%=book_id%>" method="post">
+                                <button>Want to read</button>
+                            </form>
+                        <% end %>
                     <% end %>
-            
+                
+
+                <div>
+
+                </div>
+                    
+
             </div>
         <% end %>
     </div>

@@ -10,22 +10,18 @@ CREATE TABLE users(
     last_name TEXT
 );
 
-CREATE TABLE books(
-    id SERIAL PRIMARY KEY,
-    title TEXT,
-    author TEXT,
-    cover_image TEXT,
-    rating DECIMAL,
-    genre TEXT,
-    bio TEXT,
-    book_id TEXT
-);
-
 CREATE TABLE books_users(
     id SERIAL PRIMARY KEY,
     book_id TEXT,
     user_id INTEGER,
     book_status TEXT
+);
+
+-- this table needs to be set up
+CREATE TABLE clubs_users(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER,
+    club_id INTEGER
 );
 
 -- Book Status either : want, current or read 
@@ -77,8 +73,12 @@ CREATE TABLE books_clubs(
 INSERT INTO clubs (club_name, admin_user_id) VALUES ('Friends from Uni', 1);
 INSERT INTO clubs (club_name, admin_user_id) VALUES ('My Dog Friends', 3);
 
-INSERT INTO books_clubs (book_id, club_id, book_status) VALUES ('H-F_DwAAQBAJ', 37, 'want');
+INSERT INTO books_clubs (book_id, club_id, book_status) VALUES ('H-F_DwAAQBAJ', 64, 'want');
 INSERT INTO books_clubs (book_id, club_id, book_status) VALUES ('RKUkEAAAQBAJ', 34, 'want');
 INSERT INTO books_clubs (book_id, club_id, book_status) VALUES ('M9tARpafXOIC', 34, 'want');
 
+INSERT INTO users(first_name, last_name, email, password_digest) VALUES($1, $2, $3, $4);
 
+SELECT * FROM clubs_users JOIN clubs ON clubs_users.club_id = clubs.id WHERE clubs_users.user_id = 12;
+
+SELECT * FROM clubs_users JOIN clubs ON clubs_users.club_id = clubs.id JOIN books_clubs ON clubs_users.club_id = books_clubs.club_id WHERE clubs_users.user_id = 12 and books_clubs.book_id = 'H-F_DwAAQBAJ';

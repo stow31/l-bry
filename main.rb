@@ -4,11 +4,27 @@ require 'pg'
 require 'bcrypt'
 require 'httparty'
 require 'pry' if development?
-require_relative "db/helper.rb"
 
 enable :sessions
 
+require_relative "db/helper.rb"
+
+# models
+require_relative "models/users.rb"
+require_relative "models/clubs.rb"
+require_relative "models/clubs_users.rb"
+require_relative "models/books_clubs.rb"
+require_relative "models/books_users.rb"
+
+# controllers
+
+# helper
+
 # METHODS
+
+def check_bookclub_list
+  p "checking"
+end
 
 def current_user
   if session[:user_id] == nil
@@ -36,21 +52,16 @@ def one_book(id)
   return HTTParty.get(url)
 end
 
-def club_details(club_id)
-  sql = "SELECT * FROM clubs where id = #{club_id}"
-  return run_sql(sql)[0]
-end
-
 def list_user_clubs(user_id)
-  sql_current_clubs = "SELECT * FROM users WHERE id = #{user_id}"
-  user_records = run_sql(sql_current_clubs)
+  user_records = get_user_by_id(user_id)
+  # update here
   return user_records[0]["clubs"]
 end
 
 def admin?(club_id)
   user_id = current_user["id"]
 
-  if user_id == club_details(club_id)["admin_user_id"]
+  if user_id == get_club_details_with_id(club_id)["admin_user_id"]
     return true
   end
   return false
@@ -75,6 +86,7 @@ end
 get '/books/details/:id' do
 
   res = one_book(params["id"])
+  user_id = current_user["id"]
   
   title = res["volumeInfo"]["title"]
   cover_image = res["volumeInfo"]["imageLinks"]["thumbnail"]
@@ -85,15 +97,11 @@ get '/books/details/:id' do
   book_id = params["id"]
   
   if logged_in?
-    sql = "SELECT * FROM books_users WHERE user_id = #{current_user["id"]} AND book_id = '#{book_id}';"
-    records = run_sql(sql)
+    records = get_users_book_list(user_id, book_id)
 
     # A list of clubs the user is a part of
-    club_list_arr = list_user_clubs(current_user["id"])&.split(",")
-
-    clubs_sql = "SELECT * FROM books_clubs WHERE book_id = $1;"
-    # all the records of the book club books
-    club_book_records = run_sql(clubs_sql, [book_id]);
+    club_list = get_club_list(user_id)
+    book_recs_by_club = books_in_clubs(user_id, book_id)
   end
 
   erb :book_details, locals:{
@@ -105,8 +113,8 @@ get '/books/details/:id' do
     bio: bio,
     book_id: book_id,
     records: records,
-    club_list_arr: club_list_arr,
-    club_book_records: club_book_records
+    club_list: club_list,
+    book_recs_by_club: book_recs_by_club
   }
 end
 
@@ -126,8 +134,8 @@ end
 
 # setting up login action 
 post '/books/session' do
-  sql = "SELECT * FROM users WHERE email = '#{params["email"]}'"
-  records = run_sql(sql)
+
+  records = get_user_by_email(params["email"])
 
   if records.count>0 && BCrypt::Password.new(records[0]['password_digest']) == params["password"]
     logged_in_user = records[0]
@@ -161,28 +169,17 @@ post '/books/new_session' do
   first_name = params["first_name"]
   last_name = params["last_name"]
 
-  sql_check = "SELECT * FROM users WHERE email = '#{email}';"
-  records = run_sql(sql_check)
+  records = get_user_by_email(email)
 
   if records.count == 0
-
-    password_digest = BCrypt::Password.create(password)
-
-    sql_insert = "INSERT INTO users (email, password_digest, first_name, last_name) VALUES ('#{email}', '#{password_digest}', '#{first_name}', '#{last_name}');"
-
-    run_sql(sql_insert)
-
-    sql_get_id = "SELECT * FROM users WHERE email = '#{email}';"
-
-    logged_in_result = run_sql(sql_get_id)
+    create_user(email, password, first_name, last_name)
+    logged_in_result = get_user_by_email(email)
     logged_in_user = logged_in_result[0]
     session[:user_id] = logged_in_user["id"]
-
     redirect '/'
   else
     erb :login
   end
- 
 end
 
 # add book to your want to read list if logged in 
@@ -200,8 +197,8 @@ end
 # my account page 
 get '/books/myaccount' do
   if logged_in?
-    sql = "SELECT * FROM users WHERE id = #{session[:user_id]};"
-    records = run_sql(sql)
+
+    records = get_user_by_id(session[:user_id])
     
     erb :my_account, locals:{
       users: current_user
@@ -286,26 +283,17 @@ end
 
 # clubs main page with list of clubs and create clubs input 
 get '/books/club' do
-
   if logged_in?
     user_id = current_user["id"]
+    club_list = get_club_list(user_id)
 
-    sql = "SELECT * FROM users WHERE id = #{user_id};"
-    records = run_sql(sql)
-    clubs_arr = records[0]["clubs"]&.split(",")
-    
-  erb :club_list, locals: {
-    clubs: clubs_arr
+    erb :club_list, locals: {
+    club_list: club_list
   }
-
   else
     redirect '/books/login'
   end
 
-end
-
-get '/books/club/help' do 
-  erb :clubs_help
 end
 
 # create new club, add to clubs db and add to users list
@@ -313,26 +301,11 @@ put '/books/club/new' do
   club_name = params["club_name"]
   user_id = current_user["id"]
 
-  # inserting the club into clubs table
-  sql_insert_club = "INSERT INTO clubs(club_name, admin_user_id) VALUES ($1, $2);"
-  run_sql(sql_insert_club, [club_name, user_id])
+  create_club(club_name, user_id)
 
-  # getting the new clubs id
-  sql_club_id = "SELECT * FROM clubs WHERE club_name = '#{club_name}';"
-  club_records = run_sql(sql_club_id);
+  club_records = get_club_details_with_name(club_name)
   new_club_id = club_records [0]["id"]
-
-  # getting the current clubs the user is in
-  user_current_clubs = list_user_clubs(user_id)
-
-  # ammending the current list to add the new club
-  if user_current_clubs
-    sql_update_user_clubs = "UPDATE users SET clubs = CONCAT('#{user_current_clubs}', ',#{new_club_id}') WHERE id = #{user_id}; "
-  else
-    sql_update_user_clubs = "UPDATE users SET clubs = '#{new_club_id}' WHERE id = #{user_id}; "
-  end
-
-  run_sql(sql_update_user_clubs)
+  assign_user_to_club(user_id, new_club_id)
 
   redirect request.referrer
 end
@@ -342,53 +315,9 @@ delete '/books/club/delete/:id' do
   club_id = params["id"]
   user_id = current_user["id"]
 
-  # getting the current users clubs
-  user_current_clubs = list_user_clubs(user_id)&.split(",")
+  delete_club(club_id)
 
-  # finding and removing the club that is being deleted
-  # if user_current_clubs.count >1
-  #   club_index = user_current_clubs.index("#{club_id}")
-  #   user_current_clubs.delete_at(club_index)
-  #   user_updated_clubs = user_current_clubs.join(",")
-
-  #   sql_update = "UPDATE users SET clubs = '#{user_updated_clubs}' WHERE id = #{user_id};"
-
-  #   run_sql(sql_update)
-  # else
-  #   sql_update = "UPDATE users SET clubs = NULL  WHERE id = #{user_id};"
-
-  #   run_sql(sql_update)
-  # end
-
-  # getting all the users clubs
-  sql_all = "SELECT * FROM users";
-  rec_all =  run_sql(sql_all)
-
-  rec_all.each do |user|
-    user_club_arr = user["clubs"]&.split(",")
-
-    if user_club_arr
-      if user_club_arr.include?(club_id)
-        if user_club_arr.count >1
-          club_index = user_current_clubs.index("#{club_id}")
-          user_current_clubs.delete_at(club_index)
-          user_updated_clubs = user_current_clubs.join(",")
-      
-          sql_update = "UPDATE users SET clubs = '#{user_updated_clubs}' WHERE id = #{user["id"]};"
-      
-          run_sql(sql_update)
-        else
-          sql_update = "UPDATE users SET clubs = NULL  WHERE id = #{user["id"]};"
-      
-          run_sql(sql_update)
-        end
-      end
-    end
-  end
-
-  # deleting the club from the clubs table 
-  sql_delete_club = "DELETE FROM clubs WHERE id = #{club_id};"
-  run_sql(sql_delete_club)
+  delete_club_from_all_users(club_id)
 
   redirect request.referrer
 
@@ -398,17 +327,13 @@ end
 get '/books/club_details/:id' do
   club_id = params["id"]
 
-  sql_want = "SELECT * FROM books_clubs WHERE club_id = #{club_id} AND book_status = 'want';"
-  want_list = run_sql(sql_want)
+  want_list = books_in_club(club_id, "want")
+  current_list = books_in_club(club_id, "current")
+  read_list = books_in_club(club_id, "read")
 
-  sql_current = "SELECT * FROM books_clubs WHERE club_id = #{club_id} AND book_status = 'current';"
-  current_list = run_sql(sql_current)
-
-  sql_read = "SELECT * FROM books_clubs WHERE club_id = #{club_id} AND book_status = 'read';"
-  read_list = run_sql(sql_read)
 
   erb :club_details, locals:{
-    club: club_details(club_id),
+    club: get_club_details_with_id(club_id),
     want_list: want_list,
     current_list: current_list,
     read_list: read_list
@@ -420,20 +345,12 @@ put '/books/club/new_member/:id' do
   club_id = params["id"]
   email = params["email"]
 
-  sql_check_email = "SELECT * FROM users WHERE email = $1"
-  user_record = run_sql(sql_check_email, [email])
-  
+  user_record = get_user_by_email(email)
+
   if user_record.count>0
-    club_list = list_user_clubs(user_record[0]["id"])
 
-    # ammending the current list to add the new club
-    if club_list #if club list is nil or not
-      sql_update_user_clubs = "UPDATE users SET clubs = CONCAT('#{club_list}', ',#{club_id}') WHERE id = #{user_record[0]["id"]}; "
-    else
-      sql_update_user_clubs = "UPDATE users SET clubs = '#{club_id}' WHERE id = #{user_record[0]["id"]}; "
-    end
+    assign_user_to_club(user_record[0]["id"], club_id)
 
-    run_sql(sql_update_user_clubs)
   end
   # TODO Alert when the user doens't exist ?
 
@@ -486,6 +403,10 @@ post '/books/club/add/:club_id/:book_id' do
 
 end 
 
+get '/books/club/help' do 
+  erb :clubs_help
+end
+
 get '/books/password' do
   if logged_in?
     erb :new_password
@@ -499,11 +420,7 @@ put '/books/new-password' do
   user_id = current_user["id"]
   user_new_password = params["password"]
 
-  password_digest = BCrypt::Password.create(user_new_password)
-
-  sql_update_pw = "UPDATE users SET password_digest = $1 WHERE id = $2"
-
-  run_sql(sql_update_pw, [password_digest, user_id])
+  update_password(user_id, user_new_password)
 
   redirect '/books/myaccount'
 end

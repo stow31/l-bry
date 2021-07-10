@@ -21,33 +21,29 @@
         </button>
     </form>
 
-    <% if clubs%>
-        <ol>
-            <% clubs.each do |club_id|%>
-                <li>
-                    <div class="club-list-div">
-                        <a href="/books/club_details/<%=club_id.to_i%>">
-                            <p>
-                                <%= club_details(club_id.to_i)["club_name"]%>
-                            </p>
-                        </a>
-                    
-                        <%if admin?(club_id.to_i)%>
-                            <p class="admin-text-detail">You are admin if this club</p>
-                            <form class="delete-club-form" action="/books/club/delete/<%=club_id.to_i%>" method="post">
-                                <input type="hidden" name="_method" value="delete">
-                                <button>Delete</button>
-                            </form>
-                        <%else%>
-                            <p class="admin-text-detail">Someone else is admin of this club</p>
-                        <%end%>
-                    </div>
-                </li>
-            <%end%>
-        </ol>
-    <% else %>
-        <p> you don't have any clubs, add one!
-    <% end %>
+<%# Add in link for club page %>
+<%# Add admin notification %>
+<%# If admin add delete %>
+<%# Add count member user %>
+    <ol>
+        <% club_list.each do |club|%>
+            <li class="club-list-div">
+                <a href="/books/club_details/<%= club["club_id"].to_i %>">
+                    <p><%= club["club_name"] %></p>
+                </a>
+                <%if admin?(club["club_id"].to_i)%>
+                    <p class="admin-text-detail">You are admin if this club</p>
+                    <form class="delete-club-form" action="/books/club/delete/<%= club["club_id"].to_i %>" method="post">
+                        <input type="hidden" name="_method" value="delete">
+                        <button>Delete</button>
+                    </form>
+                <%else%>
+                    <p class="admin-text-detail">Someone else is admin of this club</p>
+                <%end%>
+            </li>
+        <% end %>
+    </ol>
+
 </main>
 
 </div>
