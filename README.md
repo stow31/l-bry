@@ -6,7 +6,10 @@ L-Bry is a web based app for managing your books and bookclub using Google Books
 
 Created using Ruby, CSS, Sinatra, HTTParty, PG and BCyrpt.
 
-![alt text](https://github.com/stow31/l-bry/blob/main/screenshots/lbry-homepage.png)
+## Sample User Credentials
+
+Email: test@mail.com
+Password: Password123!
 
 ## Browsing 
 Use L-Bry to browse your favourite books, checking out the genres, rating and plot links
@@ -27,7 +30,6 @@ Only the clubs admin user can delete and invite people to the club.
 
 ### Bugs and Updates / Pain points
 
-- When you had a book to more than one of your book clubs the display is incorrect. In general the way the code is set up to display if the book is already in you book club or if you want to add it to your book club needs to be cleaned up / redone.
 - Using the Google API was tricky as you couldn't reley on the data returned to be consistant.
 - Accounting for when you want to return an array of data from the database but it can sometimes be empty.
 - If you add another person to a club and then delete the club it isn't deleted from.
@@ -49,3 +51,7 @@ Only the clubs admin user can delete and invite people to the club.
 - Created rough wireframes and then broke that into a list of smaller tasks that I slowly worked through.
 - Once the MVP was competed started to attempt the book club management feature which I followed the above process.
 - The book club feature was harder than anticipated and I plan to further investigate over the coming weeks.
+
+# Screenshots 
+
+![alt text](https://github.com/stow31/l-bry/blob/main/screenshots/lbry-homepage.png)
