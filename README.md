@@ -6,7 +6,7 @@ L-Bry is a web based app for managing your books and bookclub using Google Books
 
 Created using Ruby, CSS, Sinatra, HTTParty, PG and BCyrpt.
 
-![alt text]('./screenshots/lbry-homepage.png)
+![alt text](https://github.com/stow31/l-bry/blob/main/screenshots/lbry-homepage.png)
 
 ## Browsing 
 Use L-Bry to browse your favourite books, checking out the genres, rating and plot links
